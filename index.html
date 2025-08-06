@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Transparent Login Form By AbdulDev</title>
+  <!-- Custom CSS Link -->
+  <link rel="stylesheet" href="style.css"/>
+  <!-- Icon Link -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+</head>
+<body>
+  <div class="container">
+    <form action="#">
+      <div style="text-align: center;">
+        <img src="Image/Bicsglobal_Logo_v1.png" alt="Bics Logo" style="width: 75%;">
+      </div>
+
+      <h1>Know More Details</h1>
+
+      <!-- First Name -->
+      <div class="input-box">
+        <input type="text" placeholder="First Name" required />
+        <i class='bx bxs-user'></i>
+      </div>
+
+      <!-- Last Name -->
+      <div class="input-box">
+        <input type="text" placeholder="Last Name" required />
+        <i class='bx bxs-user'></i>
+      </div>
+
+      <!-- Email -->
+      <div class="input-box">
+        <input type="email" placeholder="Email ID" required />
+        <i class='bx bxs-envelope'></i>
+      </div>
+
+      <!-- Phone -->
+      <div class="input-box">
+        <input type="tel" placeholder="Phone Number" required />
+        <i class='bx bxs-phone'></i>
+      </div>
+
+      <!-- Product Name -->
+      <div class="input-box">
+        <input type="text" placeholder="Product Name" required />
+        <i class='bx bxs-car'></i>
+      </div>
+
+      <!-- Specification Checkbox -->
+      <div class="checkbox-box">
+        <input type="checkbox" name="specification" />
+        <label for="specification">Specification</label>
+      </div>
+
+      <!-- Dealer Location Checkbox -->
+      <div class="checkbox-box">
+        <input type="checkbox" name="dealer_location" id="dealerCheckbox" onchange="toggleNearLocation()" />
+        <label for="dealerCheckbox">Dealer Location</label>
+        </div>
+
+      <!-- Near Location (hidden by default) -->
+      <div class="input-box" id="nearLocationBox" style="display: none;">
+        <input type="text" placeholder="Near Location" />
+        <i class='bx bxs-map'></i>
+      </div>
+
+      <!-- Notes -->
+      <div class="input-box">
+        <textarea placeholder="Notes" rows="3" style="width: 100%; padding: 10px;"></textarea>
+      </div>
+
+      <!-- Remember Me -->
+      <!-- <div class="remember">
+        <label><input type="checkbox" /> Remember Me</label>
+      </div> -->
+
+      <!-- Submit -->
+      <button type="submit" class="btn">Submit</button>
+    </form>
+  </div>
+
+  <!-- Toggle Script for Dealer Location -->
+  <script>
+    function toggleNearLocation() {
+      const checkbox = document.getElementById("dealerCheckbox");
+      const nearLocationBox = document.getElementById("nearLocationBox");
+      nearLocationBox.style.display = checkbox.checked ? "block" : "none";
+    }
+  </script>
+</body>
+</html>
