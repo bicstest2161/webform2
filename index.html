@@ -3,92 +3,691 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>https://bicstest2161.github.io/webform2/</title>
-  <!-- Custom CSS Link -->
-  <link rel="stylesheet" href="style.css"/>
-  <!-- Icon Link -->
+  <title>Inquiry Form</title>
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: url(Image/bgimage.jpg);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-blend-mode: color;
+      background-color: #00000080;
+    }
+
+    .container {
+      width: 50%;
+      background: transparent;
+      color: #fff;
+      padding: 40px 30px;
+      border-radius: 10px;
+      border: 2px solid #ffffff33;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 10px #0000001a;
+    }
+
+    .container h1 {
+      font-size: 34px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .input-box {
+      position: relative;
+      width: 100%;
+      height: 50px;
+      margin: 30px 0;
+    }
+
+    .input-box input,
+    .input-box select,
+    .input-box textarea {
+      width: 100%;
+      background: transparent;
+      border: 2px solid #ffffff33;
+      outline: none;
+      border-radius: 50px;
+      font-size: 16px;
+      color: #ffffff;
+      padding: 20px 45px 20px 20px;
+    }
+
+    .input-box textarea {
+      border-radius: 20px;
+      height: 100px;
+      resize: none;
+      padding: 15px;
+    }
+
+    .iti {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    select {
+      color: #fff;
+    }
+
+    .input-box select option {
+      color: #000;
+    }
+
+    .input-box input::placeholder,
+    .input-box textarea::placeholder {
+      color: #fff;
+      opacity: 0.8;
+    }
+
+    .input-box i {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+    }
+
+    .checkbox-box {
+      margin: 30px 0;
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      color: #fff;
+    }
+
+    .checkbox-box input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #fff;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .btn {
+      width: 100%;
+      height: 45px;
+      font-size: 21px;
+      margin-top: 47px;
+      font-weight: 800;
+      color: #333;
+      background: linear-gradient(90deg, #50afee, #e0e0e0, #46472c);
+      border: 2px;
+      border-color: #46472c, #50afee, #e0e0e0;
+      outline: none;
+      border-radius: 45px;
+      box-shadow: 0 0 10px #0000001a;
+      cursor: pointer;
+      transition: background 0.5s ease;
+    }
+
+    .btn:hover {
+      background: linear-gradient(270deg, #e0e0e0, #f6fa92, #50afee);
+      background-size: 400% 400%;
+      animation: gradientShift 5s ease infinite;
+      color: rgb(0, 67, 129);
+    }
+
+    @keyframes gradientShift {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    /* Thank You Popup Modal */
+    .thank-you-modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .thank-you-content {
+      background: white;
+      color: #013c83;
+      border-radius: 16px;
+      padding: 40px 30px;
+      text-align: center;
+      max-width: 600px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .thank-you-content h1 {
+      margin-bottom: 15px;
+      font-size: 36px;
+    }
+
+    .thank-you-content .description {
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 25px;
+    }
+
+    .closeicon {
+      color: #363434;
+      font-size: 23px;
+      position: absolute;
+      right: 0;
+      top: 0;
+      margin: 19px;
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+    }
+
+    /* BICS Header Section Styles */
+    .bics-container {
+      display: flex;
+      align-items: center;
+      padding-left: 17%;
+      justify-content: space-between;
+      max-width: 1000px;
+      margin: 0 auto 30px auto;
+      width: 100%;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    /* Logo container */
+    .bics-logo {
+      flex: 0 0 auto;
+    }
+
+    .bics-logo img {
+      width: 125px;
+      height: auto;
+    }
+
+    /* Text container */
+    .bics-text {
+      flex: 1;
+      color: white;
+      text-align: left;
+    }
+
+    .bics-text h2 {
+      font-size: 47px;
+      margin: 0;
+      padding-top: 10px;
+    }
+
+    .bics-text h3 {
+      font-size: 20px;
+      margin: 5px 0 0 0;
+    }
+
+/* Phone input container */
+.iti {
+  width: 100%;
+  background: transparent;
+}
+
+/* Selected flag area */
+.iti__selected-flag {
+  background: transparent;
+  /* padding-left: 10px; */
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Country dropdown */
+.iti__country-list {
+  background: rgb(27, 102, 163);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.iti__country-list.btn:hover{
+  background-color: #fff;
+  color:black;
+}
+
+/* Country items in dropdown */
+.iti__country {
+  color: white;
+}
+
+/* Highlighted country in dropdown */
+.iti__country.iti__highlight {
+  background-color: transparent;
+}
+
+/* Input field itself */
+#phone {
+  background: transparent;
+  padding-left: 85px !important; /* Make space for flag */
+  color: white;
+}
+
+/* Dial code display */
+.iti__selected-dial-code {
+  color: white;
+}
+
+/* Arrow icon */
+.iti__arrow {
+  border-top-color: white;
+}
+
+
+    /* Responsive styles */
+    @media (max-width: 1024px) {
+      .container {
+        width: 70%;
+        padding: 30px 20px;
+      }
+
+      .container h1 {
+        font-size: 28px;
+      }
+
+      .input-box {
+        margin: 20px 0;
+      }
+
+      .btn {
+        font-size: 18px;
+        height: 40px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        width: 90%;
+        padding: 30px 20px;
+      }
+
+      /* Logo and text header stacked */
+      .bics-container {
+        flex-direction: column;
+        text-align: center;
+        padding-left: 0;
+        padding-bottom: 10%;
+      }
+
+      .bics-logo {
+        margin-bottom: 10px;
+      }
+
+      .bics-text {
+        text-align: center;
+      }
+
+      .bics-text h2 {
+        font-size: 32px;
+        padding-top: 0;
+      }
+
+      .bics-text h3 {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        width: 95%;
+        padding: 25px 15px;
+      }
+
+      .container h1 {
+        font-size: 24px;
+      }
+
+      .btn {
+        font-size: 16px;
+        height: 38px;
+      }
+
+      .thank-you-content {
+        padding: 30px 20px;
+      }
+
+      .thank-you-content h1 {
+        font-size: 28px;
+      }
+
+      .thank-you-content .description {
+        font-size: 16px;
+      }
+
+      .input-box input,
+      .input-box select,
+      .input-box textarea {
+        font-size: 14px;
+        padding: 14px 40px 14px 16px;
+      }
+
+      .input-box i {
+        font-size: 18px;
+      }
+
+      .checkbox-box {
+        font-size: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <form action="#">
-      <div style="text-align: center;">
-        <img src="Image/Bicsglobal_Logo_v1.png" alt="Bics Logo" style="width: 75%;">
+    <form id="inquiryForm" 
+      action="https://hooks.zapier.com/hooks/catch/24114315/u4jllrc/" 
+      method="POST" >
+
+      <div class="bics-container">
+        <!-- Logo -->
+        <div class="bics-logo">
+          <img src="Image/bicsglobal_logo.png" alt="BICS Logo" />
+        </div>
+
+        <!-- Text -->
+        <div class="bics-text">
+          <h2>BICS GLOBAL</h2>
+          <h3>Technology Empower Business</h3>
+        </div>
       </div>
 
-      <h1>Know More Details</h1>
+      <h1>Discover More About Your Favorite Products</h1>
 
       <!-- First Name -->
       <div class="input-box">
-        <input type="text" placeholder="First Name" required />
+        <input type="text" name="first_name" placeholder="First Name *" required />
         <i class='bx bxs-user'></i>
       </div>
 
       <!-- Last Name -->
       <div class="input-box">
-        <input type="text" placeholder="Last Name" required />
+        <input type="text" name="last_name" placeholder="Last Name" />
         <i class='bx bxs-user'></i>
       </div>
 
       <!-- Email -->
       <div class="input-box">
-        <input type="email" placeholder="Email ID" required />
+        <input type="email" name="email" placeholder="Email ID *" required />
         <i class='bx bxs-envelope'></i>
       </div>
 
-      <!-- Phone -->
+      <!-- Phone - With country code selector -->
       <div class="input-box">
-        <input type="tel" placeholder="Phone Number" required />
+        <input type="tel" name="phone" id="phone" placeholder="Phone Number" />
         <i class='bx bxs-phone'></i>
       </div>
 
       <!-- Product Name -->
       <div class="input-box">
-        <input type="text" placeholder="Product Name" required />
+        <input type="text" name="product_name" placeholder="Product Name *" required />
         <i class='bx bxs-car'></i>
+      </div>
+
+      <!-- Price Range -->
+      <div class="input-box">
+        <select name="price_range">
+          <option value="" disabled selected>Price Range</option>
+          <option value="<10000">Less than 10000</option>
+          <option value="10000-20000">10000 to 20000</option>
+          <option value="20000-30000">20000 to 30000</option>
+          <option value="30000>">Above 30000</option>
+        </select>
+        <i class='bx bxs-dollar-circle'></i> <!-- Using a dollar icon for price -->
+      </div>
+
+      <div class="input-box">
+        <select name="preferred_contact">
+          <option value="" disabled selected>Preferred Contact Method</option>
+          <option value="Phone">Phone</option>
+          <option value="Email">Email</option>
+          <option value="WhatsApp">WhatsApp</option>
+          <option value="Teams">Teams</option>
+        </select>
+        <i class='bx bxs-phone-call'></i> <!-- Phone icon, can be changed -->
       </div>
 
       <!-- Specification Checkbox -->
       <div class="checkbox-box">
-        <input type="checkbox" name="specification" />
+        <input type="checkbox" name="specification" id="specification" />
         <label for="specification">Specification</label>
       </div>
 
       <!-- Dealer Location Checkbox -->
       <div class="checkbox-box">
-        <input type="checkbox" name="dealer_location" id="dealerCheckbox" onchange="toggleNearLocation()" />
+        <input type="checkbox" name="dealer_location" id="dealerCheckbox" onchange="toggleLocationFields()" />
         <label for="dealerCheckbox">Dealer Location</label>
+      </div>
+
+      <!-- Location Dropdowns -->
+      <div id="locationFields" style="display: none;">
+        <div class="input-box">
+          <select id="countryDropdown" name="country" required>
+            <option value="">Select Country *</option>
+          </select>
+          <!-- <i class='bx bxs-chevron-down'></i> -->
         </div>
 
-      <!-- Near Location (hidden by default) -->
-      <div class="input-box" id="nearLocationBox" style="display: none;">
-        <input type="text" placeholder="Near Location" />
-        <i class='bx bxs-map'></i>
+        <div class="input-box">
+          <select id="stateDropdown" name="state" required>
+            <option value="">Select State *</option>
+          </select>
+          <!-- <i class='bx bxs-chevron-down'></i> -->
+        </div>
+
+        <div class="input-box">
+          <select id="cityDropdown" name="city" required>
+            <option value="">Select City *</option>
+          </select>
+          <!-- <i class='bx bxs-chevron-down'></i> -->
+        </div>
       </div>
 
       <!-- Notes -->
       <div class="input-box">
-        <textarea placeholder="Notes" rows="3" style="width: 100%; padding: 10px;"></textarea>
+        <textarea name="notes" placeholder="Notes" rows="3"></textarea>
       </div>
-
-      <!-- Remember Me -->
-      <!-- <div class="remember">
-        <label><input type="checkbox" /> Remember Me</label>
-      </div> -->
 
       <!-- Submit -->
       <button type="submit" class="btn">Submit</button>
     </form>
   </div>
 
-  <!-- Toggle Script for Dealer Location -->
+  <!-- Thank You Modal -->
+  <div id="thankYouModal" class="thank-you-modal">
+    <div class="thank-you-content">
+      <button class="closeicon" onclick="closePopup()">x</button>
+      <img src="Image/Bicsglobal_Logo_v1.png" alt="Bics Logo" height="70">
+      <h1>Thank You!</h1>
+      <p class="description">Your inquiry has been submitted successfully.<br>Please check your email for more details.</p>
+      <button class="btn" onclick="closePopup()">OK</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
   <script>
-    function toggleNearLocation() {
-      const checkbox = document.getElementById("dealerCheckbox");
-      const nearLocationBox = document.getElementById("nearLocationBox");
-      nearLocationBox.style.display = checkbox.checked ? "block" : "none";
+    let countryData = [];
+
+    // Initialize phone input
+    const phoneInput = document.querySelector("#phone");
+    const iti = window.intlTelInput(phoneInput, {
+      utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
+      separateDialCode: true,
+      preferredCountries: ['us', 'gb', 'in']
+    });
+
+    async function loadCountries() {
+      try {
+        const res = await fetch("https://countriesnow.space/api/v0.1/countries/states");
+        const result = await res.json();
+        
+        if (result.error === false && result.data) {
+          countryData = result.data;
+          const countryDropdown = document.getElementById("countryDropdown");
+          
+          // Sort countries alphabetically
+          countryData.sort((a, b) => a.name.localeCompare(b.name));
+          
+          countryData.forEach(country => {
+            const option = document.createElement("option");
+            option.value = country.name;
+            option.textContent = country.name;
+            countryDropdown.appendChild(option);
+          });
+        } else {
+          console.error("Failed to load countries:", result.msg);
+        }
+      } catch (error) {
+        console.error("Error loading countries:", error);
+      }
     }
+
+    document.getElementById("countryDropdown").addEventListener("change", function() {
+      const selectedCountry = this.value;
+      const stateDropdown = document.getElementById("stateDropdown");
+      
+      // Reset state and city dropdowns
+      stateDropdown.innerHTML = '<option value="">Select State *</option>';
+      document.getElementById("cityDropdown").innerHTML = '<option value="">Select City *</option>';
+      
+      if (selectedCountry) {
+        const matchedCountry = countryData.find(c => c.name === selectedCountry);
+        
+        if (matchedCountry && matchedCountry.states && matchedCountry.states.length > 0) {
+          // Sort states alphabetically
+          matchedCountry.states.sort((a, b) => a.name.localeCompare(b.name));
+          
+          matchedCountry.states.forEach(state => {
+            const option = document.createElement("option");
+            option.value = state.name;
+            option.textContent = state.name;
+            stateDropdown.appendChild(option);
+          });
+        } else {
+          console.log("No states found for selected country");
+        }
+      }
+    });
+
+    document.getElementById("stateDropdown").addEventListener("change", async function() {
+      const selectedCountry = document.getElementById("countryDropdown").value;
+      const selectedState = this.value;
+      const cityDropdown = document.getElementById("cityDropdown");
+      
+      cityDropdown.innerHTML = '<option value="">Select City *</option>';
+      
+      if (selectedCountry && selectedState) {
+        try {
+          const res = await fetch("https://countriesnow.space/api/v0.1/countries/state/cities", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ 
+              country: selectedCountry, 
+              state: selectedState 
+            })
+          });
+          
+          const result = await res.json();
+          
+          if (result.error === false && result.data && result.data.length > 0) {
+            // Sort cities alphabetically
+            result.data.sort((a, b) => a.localeCompare(b));
+            
+            result.data.forEach(city => {
+              const option = document.createElement("option");
+              option.value = city;
+              option.textContent = city;
+              cityDropdown.appendChild(option);
+            });
+          } else {
+            console.log("No cities found for selected state");
+          }
+        } catch (error) {
+          console.error("Error loading cities:", error);
+        }
+      }
+    });
+
+    function toggleLocationFields() {
+      const dealerCheckbox = document.getElementById("dealerCheckbox");
+      const locationFields = document.getElementById("locationFields");
+      const country = document.getElementById("countryDropdown");
+      const state = document.getElementById("stateDropdown");
+      const city = document.getElementById("cityDropdown");
+
+      if (dealerCheckbox.checked) {
+        locationFields.style.display = "block";
+        country.setAttribute("required", true);
+        state.setAttribute("required", true);
+        city.setAttribute("required", true);
+      } else {
+        locationFields.style.display = "none";
+        country.removeAttribute("required");
+        state.removeAttribute("required");
+        city.removeAttribute("required");
+
+        country.selectedIndex = 0;
+        state.innerHTML = '<option value="">Select State *</option>';
+        city.innerHTML = '<option value="">Select City *</option>';
+      }
+    }
+
+    document.getElementById("inquiryForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      
+      // Format phone number with country code
+      const phoneInput = document.querySelector("#phone");
+      const fullPhone = iti.getNumber();
+      phoneInput.value = fullPhone;
+      
+      // Submit form data
+      const formData = new FormData(this);
+      
+      fetch(this.action, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (response.ok) {
+          document.getElementById("thankYouModal").style.display = "flex";
+        } else {
+          alert("There was an error submitting the form. Please try again.");
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("There was an error submitting the form. Please try again.");
+      });
+    });
+
+    function closePopup() {
+      document.getElementById("thankYouModal").style.display = "none";
+      document.getElementById("inquiryForm").reset();
+      toggleLocationFields(); // Reset dropdowns
+      iti.setNumber(""); // Reset phone input
+    }
+
+    // Load initial data
+    loadCountries();
   </script>
 </body>
 </html>
-
