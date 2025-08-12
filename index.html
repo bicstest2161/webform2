@@ -388,6 +388,17 @@
         font-size: 14px;
       }
     }
+
+  input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+
   </style>
 </head>
 <body>
@@ -431,7 +442,7 @@
 
       <!-- Phone - With country code selector -->
       <div class="input-box">
-        <input type="tel" name="phone" id="phone" placeholder="Phone Number" />
+        <input type="number" name="phone" id="phone" placeholder="Phone Number" />
         <i class='bx bxs-phone'></i>
       </div>
 
@@ -443,6 +454,12 @@
 
       <!-- Price Range -->
       <div class="input-box">
+        <input type="number" name="price_range" placeholder="Enter your price range" />
+        <i class='bx bxs-dollar-circle'></i>
+      </div>
+
+      <!-- Price Range -->
+      <!-- <div class="input-box">
         <select name="price_range">
           <option value="" disabled selected>Price Range</option>
           <option value="<10000">Less than 10000</option>
@@ -450,8 +467,8 @@
           <option value="20000-30000">20000 to 30000</option>
           <option value="30000>">Above 30000</option>
         </select>
-        <i class='bx bxs-dollar-circle'></i> <!-- Using a dollar icon for price -->
-      </div>
+        <i class='bx bxs-dollar-circle'></i>
+      </div> -->
 
       <div class="input-box">
         <select name="preferred_contact">
@@ -504,6 +521,9 @@
       <div class="input-box">
         <textarea name="notes" placeholder="Notes" rows="3"></textarea>
       </div>
+
+      <!-- Hidden field for the unique ID -->
+      <input type="hidden" name="form_id" id="form_id">
 
       <!-- Submit -->
       <button type="submit" class="btn">Submit</button>
@@ -650,10 +670,29 @@
         city.innerHTML = '<option value="">Select City *</option>';
       }
     }
+    function generateID() {
+      const now = new Date();
+      const pad = (n) => n.toString().padStart(2, '0');
+
+      const id =
+        pad(now.getDate()) +
+        pad(now.getMonth() + 1) +
+        now.getFullYear() +
+        pad(now.getHours()) +
+        pad(now.getMinutes()) +
+        pad(now.getSeconds());
+
+      return id;
+    }
+
 
     document.getElementById("inquiryForm").addEventListener("submit", function(e) {
       e.preventDefault();
       
+      
+      // Generate and set the ID
+      document.getElementById("form_id").value = generateID();
+
       // Format phone number with country code
       const phoneInput = document.querySelector("#phone");
       const fullPhone = iti.getNumber();
