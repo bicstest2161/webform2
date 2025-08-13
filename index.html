@@ -240,58 +240,73 @@
       margin: 5px 0 0 0;
     }
 
-/* Phone input container */
-.iti {
-  width: 100%;
-  background: transparent;
-}
+    /* Updated Phone Input Styles */
+    .iti {
+      width: 100%;
+    }
 
-/* Selected flag area */
-.iti__selected-flag {
-  background: transparent;
-  /* padding-left: 10px; */
-  border-right: 1px solid rgba(255, 255, 255, 0.3);
-}
+    .iti__selected-flag {
+      background: transparent !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.3) !important;
+    }
 
-/* Country dropdown */
-.iti__country-list {
-  background: rgb(27, 102, 163);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-}
+    .iti__country-list {
+      background: rgba(27, 102, 163, 0.95) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      color: white !important;
+    }
 
-.iti__country-list.btn:hover{
-  background-color: #fff;
-  color:black;
-}
+    .iti__country {
+      color: white !important;
+      background: transparent !important;
+    }
 
-/* Country items in dropdown */
-.iti__country {
-  color: white;
-}
+    .iti__country:hover, 
+    .iti__country.iti__highlight {
+      background-color: rgba(255, 255, 255, 0.2) !important;
+    }
 
-/* Highlighted country in dropdown */
-.iti__country.iti__highlight {
-  background-color: transparent;
-}
+    .iti__divider {
+      border-bottom-color: rgba(255, 255, 255, 0.2) !important;
+    }
 
-/* Input field itself */
-#phone {
-  background: transparent;
-  padding-left: 85px !important; /* Make space for flag */
-  color: white;
-}
+    .iti__arrow {
+      border-top-color: white !important;
+    }
 
-/* Dial code display */
-.iti__selected-dial-code {
-  color: white;
-}
+    /* Fix for the dropdown arrow position */
+    .iti__arrow--up {
+      border-bottom-color: white !important;
+    }
 
-/* Arrow icon */
-.iti__arrow {
-  border-top-color: white;
-}
+    /* Selected country in dropdown */
+    .iti__country.iti__preferred {
+      background-color: rgba(255, 255, 255, 0.1) !important;
+    }
 
+    /* Input field */
+    #phone {
+      padding-left: 85px !important;
+      color: white !important;
+      background: transparent !important;
+    }
+
+    /* Dial code */
+    .iti__selected-dial-code {
+      color: white !important;
+    }
+
+    /* Dropdown search box */
+    .iti__search-input {
+      background: rgba(0, 0, 0, 0.2) !important;
+      color: white !important;
+      border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    /* Placeholder text in search */
+    .iti__search-input::placeholder {
+      color: rgba(255, 255, 255, 0.7) !important;
+    }
 
     /* Responsive styles */
     @media (max-width: 1024px) {
@@ -389,16 +404,15 @@
       }
     }
 
-  input[type=number]::-webkit-inner-spin-button, 
-  input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
 
-  input[type=number] {
-    -moz-appearance: textfield;
-  }
-
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
   </style>
 </head>
 <body>
@@ -424,51 +438,39 @@
 
       <!-- First Name -->
       <div class="input-box">
-        <input type="text" name="first_name" placeholder="First Name *" required />
+        <input type="text" name="first_name" autocomplete="off" placeholder="First Name *" required />
         <i class='bx bxs-user'></i>
       </div>
 
       <!-- Last Name -->
       <div class="input-box">
-        <input type="text" name="last_name" placeholder="Last Name" />
+        <input type="text" name="last_name" autocomplete="off" placeholder="Last Name" />
         <i class='bx bxs-user'></i>
       </div>
 
       <!-- Email -->
       <div class="input-box">
-        <input type="email" name="email" placeholder="Email ID *" required />
+        <input type="email" name="email" autocomplete="off" placeholder="Email ID *" required />
         <i class='bx bxs-envelope'></i>
       </div>
 
       <!-- Phone - With country code selector -->
       <div class="input-box">
-        <input type="number" name="phone" id="phone" placeholder="Phone Number" />
+        <input type="tel" pattern="[0-9]*" inputmode="numeric" maxlength="17" name="phone" id="phone" placeholder="Phone Number" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
         <i class='bx bxs-phone'></i>
       </div>
 
       <!-- Product Name -->
       <div class="input-box">
-        <input type="text" name="product_name" placeholder="Product Name *" required />
+        <input type="text" name="product_name" autocomplete="off" placeholder="Product Name *" required />
         <i class='bx bxs-car'></i>
       </div>
 
       <!-- Price Range -->
       <div class="input-box">
-        <input type="number" name="price_range" placeholder="Enter your price range" />
+        <input type="number" name="price_range" maxlength="13" placeholder="Enter your price range" inputmode="numeric" pattern="[0-9]*"/>
         <i class='bx bxs-dollar-circle'></i>
       </div>
-
-      <!-- Price Range -->
-      <!-- <div class="input-box">
-        <select name="price_range">
-          <option value="" disabled selected>Price Range</option>
-          <option value="<10000">Less than 10000</option>
-          <option value="10000-20000">10000 to 20000</option>
-          <option value="20000-30000">20000 to 30000</option>
-          <option value="30000>">Above 30000</option>
-        </select>
-        <i class='bx bxs-dollar-circle'></i>
-      </div> -->
 
       <div class="input-box">
         <select name="preferred_contact">
@@ -478,7 +480,7 @@
           <option value="WhatsApp">WhatsApp</option>
           <option value="Teams">Teams</option>
         </select>
-        <i class='bx bxs-phone-call'></i> <!-- Phone icon, can be changed -->
+        <i class='bx bxs-phone-call'></i>
       </div>
 
       <!-- Specification Checkbox -->
@@ -499,21 +501,18 @@
           <select id="countryDropdown" name="country" required>
             <option value="">Select Country *</option>
           </select>
-          <!-- <i class='bx bxs-chevron-down'></i> -->
         </div>
 
         <div class="input-box">
           <select id="stateDropdown" name="state" required>
             <option value="">Select State *</option>
           </select>
-          <!-- <i class='bx bxs-chevron-down'></i> -->
         </div>
 
         <div class="input-box">
           <select id="cityDropdown" name="city" required>
             <option value="">Select City *</option>
           </select>
-          <!-- <i class='bx bxs-chevron-down'></i> -->
         </div>
       </div>
 
@@ -542,7 +541,7 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
-  <script>
+ <script>
     let countryData = [];
 
     // Initialize phone input
@@ -550,11 +549,119 @@
     const iti = window.intlTelInput(phoneInput, {
       utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
       separateDialCode: true,
-      preferredCountries: ['us', 'gb', 'in']
+      preferredCountries: ['us', 'gb', 'in'],
+      customPlaceholder: function() {
+        return "Phone Number";
+      },
+      initialCountry: "auto",
+      geoIpLookup: function(callback) {
+        getIPGeolocation()
+          .then(data => callback(data.countryCode || "us"))
+          .catch(() => callback("us"));
+      }
     });
+
+    // Reliable geolocation using multiple fallbacks
+    async function getIPGeolocation() {
+      try {
+        // Try ip-api.com first (JSONP)
+        const ipApiData = await new Promise((resolve) => {
+          const script = document.createElement('script');
+          script.src = 'https://ip-api.com/json/?callback=handleIPAPIResponse';
+          document.head.appendChild(script);
+          
+          window.handleIPAPIResponse = function(data) {
+            document.head.removeChild(script);
+            delete window.handleIPAPIResponse;
+            resolve(data.status === 'success' ? data : null);
+          };
+          
+          setTimeout(() => {
+            if (window.handleIPAPIResponse) {
+              document.head.removeChild(script);
+              delete window.handleIPAPIResponse;
+              resolve(null);
+            }
+          }, 2000);
+        });
+
+        if (ipApiData) {
+          return {
+            country: ipApiData.country,
+            region: ipApiData.regionName,
+            city: ipApiData.city,
+            countryCode: ipApiData.countryCode
+          };
+        }
+
+        // Fallback to ipinfo.io if available
+        try {
+          const ipInfoRes = await fetch('https://ipinfo.io/json?token=YOUR_IPINFO_TOKEN');
+          const ipInfoData = await ipInfoRes.json();
+          if (ipInfoData.country && ipInfoData.region) {
+            return {
+              country: ipInfoData.country,
+              region: ipInfoData.region,
+              city: ipInfoData.city,
+              countryCode: ipInfoData.country
+            };
+          }
+        } catch (e) {}
+
+        // Final fallback to free API
+        const freeRes = await fetch('https://ipapi.co/json/');
+        const freeData = await freeRes.json();
+        return {
+          country: freeData.country_name,
+          region: freeData.region,
+          city: freeData.city,
+          countryCode: freeData.country_code
+        };
+
+      } catch (error) {
+        console.error("Geolocation error:", error);
+        return {
+          country: "",
+          region: "",
+          city: "",
+          countryCode: "us"
+        };
+      }
+    }
+
+    // Smart matching with improved tolerance
+    function findBestMatch(options, searchValue) {
+      if (!searchValue || !options.length) return null;
+      
+      const normalize = (str) => str.toLowerCase().replace(/[^a-z]/g, '');
+      const searchNorm = normalize(searchValue);
+      
+      // Try different matching strategies
+      const match = Array.from(options).find(opt => {
+        const optNorm = normalize(opt.text);
+        
+        // Exact match
+        if (optNorm === searchNorm) return true;
+        
+        // Contains match
+        if (optNorm.includes(searchNorm)) return true;
+        if (searchNorm.includes(optNorm)) return true;
+        
+        // Initials match (for states like TN, KA)
+        const optInitials = opt.text.split(' ').map(w => w[0]).join('').toLowerCase();
+        if (optInitials === searchNorm) return true;
+        
+        // Fuzzy match
+        const diff = Math.abs(optNorm.length - searchNorm.length);
+        return diff <= 3 && (optNorm.includes(searchNorm) || searchNorm.includes(optNorm));
+      });
+      
+      return match || null;
+    }
 
     async function loadCountries() {
       try {
+        // Load countries data first
         const res = await fetch("https://countriesnow.space/api/v0.1/countries/states");
         const result = await res.json();
         
@@ -565,43 +672,88 @@
           // Sort countries alphabetically
           countryData.sort((a, b) => a.name.localeCompare(b.name));
           
+          // Populate countries
           countryData.forEach(country => {
             const option = document.createElement("option");
             option.value = country.name;
             option.textContent = country.name;
             countryDropdown.appendChild(option);
           });
-        } else {
-          console.error("Failed to load countries:", result.msg);
+
+          // Get and set user location
+          const location = await getIPGeolocation();
+          if (location.country) {
+            await autoSelectLocation(location);
+          }
         }
       } catch (error) {
         console.error("Error loading countries:", error);
       }
     }
 
+    async function autoSelectLocation(location) {
+      console.log("Auto-selecting location:", location);
+      
+      const countryDropdown = document.getElementById("countryDropdown");
+      const countryMatch = findBestMatch(countryDropdown.options, location.country);
+      
+      if (countryMatch) {
+        countryMatch.selected = true;
+        countryDropdown.dispatchEvent(new Event('change'));
+        
+        // Wait for states to load
+        await waitForOptions('#stateDropdown', 15, 200);
+        
+        const stateDropdown = document.getElementById("stateDropdown");
+        const stateMatch = findBestMatch(stateDropdown.options, location.region);
+        
+        if (stateMatch) {
+          stateMatch.selected = true;
+          stateDropdown.dispatchEvent(new Event('change'));
+          
+          // Wait for cities to load
+          await waitForOptions('#cityDropdown', 15, 200);
+          
+          const cityDropdown = document.getElementById("cityDropdown");
+          const cityMatch = findBestMatch(cityDropdown.options, location.city);
+          if (cityMatch) cityMatch.selected = true;
+        }
+      }
+    }
+
+    // Helper function to wait for dropdown options
+    function waitForOptions(selector, maxAttempts, interval) {
+      return new Promise((resolve) => {
+        let attempts = 0;
+        const check = setInterval(() => {
+          const options = document.querySelectorAll(`${selector} option`);
+          if (options.length > 1 || ++attempts >= maxAttempts) {
+            clearInterval(check);
+            resolve();
+          }
+        }, interval);
+      });
+    }
+
+    // Rest of your existing functions
     document.getElementById("countryDropdown").addEventListener("change", function() {
       const selectedCountry = this.value;
       const stateDropdown = document.getElementById("stateDropdown");
       
-      // Reset state and city dropdowns
       stateDropdown.innerHTML = '<option value="">Select State *</option>';
       document.getElementById("cityDropdown").innerHTML = '<option value="">Select City *</option>';
       
       if (selectedCountry) {
         const matchedCountry = countryData.find(c => c.name === selectedCountry);
         
-        if (matchedCountry && matchedCountry.states && matchedCountry.states.length > 0) {
-          // Sort states alphabetically
+        if (matchedCountry?.states?.length) {
           matchedCountry.states.sort((a, b) => a.name.localeCompare(b.name));
-          
           matchedCountry.states.forEach(state => {
             const option = document.createElement("option");
             option.value = state.name;
             option.textContent = state.name;
             stateDropdown.appendChild(option);
           });
-        } else {
-          console.log("No states found for selected country");
         }
       }
     });
@@ -617,29 +769,19 @@
         try {
           const res = await fetch("https://countriesnow.space/api/v0.1/countries/state/cities", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ 
-              country: selectedCountry, 
-              state: selectedState 
-            })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ country: selectedCountry, state: selectedState })
           });
           
           const result = await res.json();
-          
-          if (result.error === false && result.data && result.data.length > 0) {
-            // Sort cities alphabetically
+          if (result.error === false && result.data?.length) {
             result.data.sort((a, b) => a.localeCompare(b));
-            
             result.data.forEach(city => {
               const option = document.createElement("option");
               option.value = city;
               option.textContent = city;
               cityDropdown.appendChild(option);
             });
-          } else {
-            console.log("No cities found for selected state");
           }
         } catch (error) {
           console.error("Error loading cities:", error);
@@ -650,83 +792,63 @@
     function toggleLocationFields() {
       const dealerCheckbox = document.getElementById("dealerCheckbox");
       const locationFields = document.getElementById("locationFields");
-      const country = document.getElementById("countryDropdown");
-      const state = document.getElementById("stateDropdown");
-      const city = document.getElementById("cityDropdown");
-
-      if (dealerCheckbox.checked) {
-        locationFields.style.display = "block";
-        country.setAttribute("required", true);
-        state.setAttribute("required", true);
-        city.setAttribute("required", true);
-      } else {
-        locationFields.style.display = "none";
-        country.removeAttribute("required");
-        state.removeAttribute("required");
-        city.removeAttribute("required");
-
-        country.selectedIndex = 0;
-        state.innerHTML = '<option value="">Select State *</option>';
-        city.innerHTML = '<option value="">Select City *</option>';
+      const fieldsRequired = dealerCheckbox.checked;
+      
+      locationFields.style.display = fieldsRequired ? "block" : "none";
+      document.getElementById("countryDropdown").toggleAttribute("required", fieldsRequired);
+      document.getElementById("stateDropdown").toggleAttribute("required", fieldsRequired);
+      document.getElementById("cityDropdown").toggleAttribute("required", fieldsRequired);
+      
+      if (!fieldsRequired) {
+        document.getElementById("countryDropdown").selectedIndex = 0;
+        document.getElementById("stateDropdown").innerHTML = '<option value="">Select State *</option>';
+        document.getElementById("cityDropdown").innerHTML = '<option value="">Select City *</option>';
       }
     }
+
     function generateID() {
       const now = new Date();
       const pad = (n) => n.toString().padStart(2, '0');
-
-      const id =
-        pad(now.getDate()) +
-        pad(now.getMonth() + 1) +
-        now.getFullYear() +
-        pad(now.getHours()) +
-        pad(now.getMinutes()) +
-        pad(now.getSeconds());
-
-      return id;
+      return pad(now.getDate()) + pad(now.getMonth() + 1) + now.getFullYear() +
+             pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
     }
-
 
     document.getElementById("inquiryForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      
-      
-      // Generate and set the ID
       document.getElementById("form_id").value = generateID();
-
-      // Format phone number with country code
-      const phoneInput = document.querySelector("#phone");
-      const fullPhone = iti.getNumber();
-      phoneInput.value = fullPhone;
       
-      // Submit form data
-      const formData = new FormData(this);
+      const fullPhone = iti.getNumber();
+      document.querySelector("#phone").value = fullPhone;
       
       fetch(this.action, {
         method: 'POST',
-        body: formData
+        body: new FormData(this)
       })
       .then(response => {
         if (response.ok) {
           document.getElementById("thankYouModal").style.display = "flex";
         } else {
-          alert("There was an error submitting the form. Please try again.");
+          alert("Error submitting form. Please try again.");
         }
       })
       .catch(error => {
         console.error('Error:', error);
-        alert("There was an error submitting the form. Please try again.");
+        alert("Error submitting form. Please try again.");
       });
     });
 
     function closePopup() {
       document.getElementById("thankYouModal").style.display = "none";
       document.getElementById("inquiryForm").reset();
-      toggleLocationFields(); // Reset dropdowns
-      iti.setNumber(""); // Reset phone input
+      toggleLocationFields();
+      iti.setNumber("");
     }
 
-    // Load initial data
-    loadCountries();
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      loadCountries();
+      document.getElementById("dealerCheckbox").addEventListener("change", toggleLocationFields);
+    });
   </script>
 </body>
 </html>
