@@ -171,7 +171,7 @@
       border-radius: 16px;
       padding: 40px 30px;
       text-align: center;
-      max-width: 600px;
+      max-width: 50%;
       box-shadow: 0 10px 25px rgba(0,0,0,0.3);
       position: relative;
     }
@@ -472,28 +472,29 @@
         <i class='bx bxs-dollar-circle'></i>
       </div>
 
-      <div class="input-box">
-        <select name="preferred_contact">
-          <option value="" disabled selected>Preferred Contact Method</option>
-          <option value="Phone">Phone</option>
-          <option value="Email">Email</option>
-          <option value="WhatsApp">WhatsApp</option>
-          <option value="Teams">Teams</option>
-        </select>
-        <i class='bx bxs-phone-call'></i>
-      </div>
+      <!-- Select -->
+        <div class="input-box">
+          <select name="preferred_contact" required>
+            <option value="" disabled selected>Preferred Contact Method</option>
+            <option value="Phone">Phone</option>
+            <option value="Email">Email</option>
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="Teams">Teams</option>
+          </select>
+          <i class='bx bxs-phone-call'></i>
+        </div>
 
       <!-- Specification Checkbox -->
-      <div class="checkbox-box">
-        <input type="checkbox" name="specification" id="specification" />
-        <label for="specification">Specification</label>
-      </div>
+        <div class="checkbox-box">
+          <input type="checkbox" id="specification" />
+          <label for="specification">Specification</label>
+        </div>
 
       <!-- Dealer Location Checkbox -->
-      <div class="checkbox-box">
-        <input type="checkbox" name="dealer_location" id="dealerCheckbox" onchange="toggleLocationFields()" />
-        <label for="dealerCheckbox">Dealer Location</label>
-      </div>
+        <div class="checkbox-box">
+          <input type="checkbox" id="dealerCheckbox" onchange="toggleLocationFields()" />
+          <label for="dealerCheckbox">Dealer Location</label>
+        </div>
 
       <!-- Location Dropdowns -->
       <div id="locationFields" style="display: none;">
@@ -541,314 +542,241 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
- <script>
-    let countryData = [];
+<script>
+let countryData = [];
 
-    // Initialize phone input
-    const phoneInput = document.querySelector("#phone");
-    const iti = window.intlTelInput(phoneInput, {
-      utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
-      separateDialCode: true,
-      preferredCountries: ['us', 'gb', 'in'],
-      customPlaceholder: function() {
-        return "Phone Number";
-      },
-      initialCountry: "auto",
-      geoIpLookup: function(callback) {
-        getIPGeolocation()
-          .then(data => callback(data.countryCode || "us"))
-          .catch(() => callback("us"));
-      }
+// ------------------ Phone Input ------------------
+const phoneInput = document.querySelector("#phone");
+const iti = window.intlTelInput(phoneInput, {
+  utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
+  separateDialCode: true,
+  preferredCountries: ['us', 'gb', 'in'],
+  initialCountry: "auto",
+  geoIpLookup: function(callback) {
+    getIPGeolocation().then(data => callback(data.countryCode || "us")).catch(() => callback("us"));
+  }
+});
+
+// ------------------ Geolocation ------------------
+async function getIPGeolocation() {
+  try {
+    const ipApiData = await new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://ip-api.com/json/?callback=handleIPAPIResponse';
+      document.head.appendChild(script);
+      window.handleIPAPIResponse = function(data) {
+        document.head.removeChild(script);
+        delete window.handleIPAPIResponse;
+        resolve(data.status === 'success' ? data : null);
+      };
+      setTimeout(() => {
+        if (window.handleIPAPIResponse) {
+          document.head.removeChild(script);
+          delete window.handleIPAPIResponse;
+          resolve(null);
+        }
+      }, 2000);
     });
+    if (ipApiData) return { country: ipApiData.country, region: ipApiData.regionName, city: ipApiData.city, countryCode: ipApiData.countryCode };
+    try {
+      const ipInfoRes = await fetch('https://ipinfo.io/json?token=YOUR_IPINFO_TOKEN');
+      const ipInfoData = await ipInfoRes.json();
+      if (ipInfoData.country && ipInfoData.region) return { country: ipInfoData.country, region: ipInfoData.region, city: ipInfoData.city, countryCode: ipInfoData.country };
+    } catch(e){}
+    const freeRes = await fetch('https://ipapi.co/json/');
+    const freeData = await freeRes.json();
+    return { country: freeData.country_name, region: freeData.region, city: freeData.city, countryCode: freeData.country_code };
+  } catch (error) {
+    console.error("Geolocation error:", error);
+    return { country: "", region: "", city: "", countryCode: "us" };
+  }
+}
 
-    // Reliable geolocation using multiple fallbacks
-    async function getIPGeolocation() {
-      try {
-        // Try ip-api.com first (JSONP)
-        const ipApiData = await new Promise((resolve) => {
-          const script = document.createElement('script');
-          script.src = 'https://ip-api.com/json/?callback=handleIPAPIResponse';
-          document.head.appendChild(script);
-          
-          window.handleIPAPIResponse = function(data) {
-            document.head.removeChild(script);
-            delete window.handleIPAPIResponse;
-            resolve(data.status === 'success' ? data : null);
-          };
-          
-          setTimeout(() => {
-            if (window.handleIPAPIResponse) {
-              document.head.removeChild(script);
-              delete window.handleIPAPIResponse;
-              resolve(null);
-            }
-          }, 2000);
-        });
+// ------------------ Helper Functions ------------------
+function findBestMatch(options, searchValue) {
+  if (!searchValue || !options.length) return null;
+  const normalize = (str) => str.toLowerCase().replace(/[^a-z]/g, '');
+  const searchNorm = normalize(searchValue);
+  return Array.from(options).find(opt => {
+    const optNorm = normalize(opt.text);
+    if (optNorm === searchNorm) return true;
+    if (optNorm.includes(searchNorm) || searchNorm.includes(optNorm)) return true;
+    const optInitials = opt.text.split(' ').map(w => w[0]).join('').toLowerCase();
+    if (optInitials === searchNorm) return true;
+    return Math.abs(optNorm.length - searchNorm.length) <= 3 && (optNorm.includes(searchNorm) || searchNorm.includes(optNorm));
+  }) || null;
+}
 
-        if (ipApiData) {
-          return {
-            country: ipApiData.country,
-            region: ipApiData.regionName,
-            city: ipApiData.city,
-            countryCode: ipApiData.countryCode
-          };
-        }
-
-        // Fallback to ipinfo.io if available
-        try {
-          const ipInfoRes = await fetch('https://ipinfo.io/json?token=YOUR_IPINFO_TOKEN');
-          const ipInfoData = await ipInfoRes.json();
-          if (ipInfoData.country && ipInfoData.region) {
-            return {
-              country: ipInfoData.country,
-              region: ipInfoData.region,
-              city: ipInfoData.city,
-              countryCode: ipInfoData.country
-            };
-          }
-        } catch (e) {}
-
-        // Final fallback to free API
-        const freeRes = await fetch('https://ipapi.co/json/');
-        const freeData = await freeRes.json();
-        return {
-          country: freeData.country_name,
-          region: freeData.region,
-          city: freeData.city,
-          countryCode: freeData.country_code
-        };
-
-      } catch (error) {
-        console.error("Geolocation error:", error);
-        return {
-          country: "",
-          region: "",
-          city: "",
-          countryCode: "us"
-        };
+function waitForOptions(selector, maxAttempts=15, interval=200) {
+  return new Promise(resolve => {
+    let attempts = 0;
+    const check = setInterval(() => {
+      const options = document.querySelectorAll(`${selector} option`);
+      if (options.length > 1 || ++attempts >= maxAttempts) {
+        clearInterval(check);
+        resolve();
       }
-    }
+    }, interval);
+  });
+}
 
-    // Smart matching with improved tolerance
-    function findBestMatch(options, searchValue) {
-      if (!searchValue || !options.length) return null;
-      
-      const normalize = (str) => str.toLowerCase().replace(/[^a-z]/g, '');
-      const searchNorm = normalize(searchValue);
-      
-      // Try different matching strategies
-      const match = Array.from(options).find(opt => {
-        const optNorm = normalize(opt.text);
-        
-        // Exact match
-        if (optNorm === searchNorm) return true;
-        
-        // Contains match
-        if (optNorm.includes(searchNorm)) return true;
-        if (searchNorm.includes(optNorm)) return true;
-        
-        // Initials match (for states like TN, KA)
-        const optInitials = opt.text.split(' ').map(w => w[0]).join('').toLowerCase();
-        if (optInitials === searchNorm) return true;
-        
-        // Fuzzy match
-        const diff = Math.abs(optNorm.length - searchNorm.length);
-        return diff <= 3 && (optNorm.includes(searchNorm) || searchNorm.includes(optNorm));
-      });
-      
-      return match || null;
-    }
-
-    async function loadCountries() {
-      try {
-        // Load countries data first
-        const res = await fetch("https://countriesnow.space/api/v0.1/countries/states");
-        const result = await res.json();
-        
-        if (result.error === false && result.data) {
-          countryData = result.data;
-          const countryDropdown = document.getElementById("countryDropdown");
-          
-          // Sort countries alphabetically
-          countryData.sort((a, b) => a.name.localeCompare(b.name));
-          
-          // Populate countries
-          countryData.forEach(country => {
-            const option = document.createElement("option");
-            option.value = country.name;
-            option.textContent = country.name;
-            countryDropdown.appendChild(option);
-          });
-
-          // Get and set user location
-          const location = await getIPGeolocation();
-          if (location.country) {
-            await autoSelectLocation(location);
-          }
-        }
-      } catch (error) {
-        console.error("Error loading countries:", error);
-      }
-    }
-
-    async function autoSelectLocation(location) {
-      console.log("Auto-selecting location:", location);
-      
+// ------------------ Load Countries / Auto-select ------------------
+async function loadCountries() {
+  try {
+    const res = await fetch("https://countriesnow.space/api/v0.1/countries/states");
+    const result = await res.json();
+    if (result.error === false && result.data) {
+      countryData = result.data;
       const countryDropdown = document.getElementById("countryDropdown");
-      const countryMatch = findBestMatch(countryDropdown.options, location.country);
-      
-      if (countryMatch) {
-        countryMatch.selected = true;
-        countryDropdown.dispatchEvent(new Event('change'));
-        
-        // Wait for states to load
-        await waitForOptions('#stateDropdown', 15, 200);
-        
-        const stateDropdown = document.getElementById("stateDropdown");
-        const stateMatch = findBestMatch(stateDropdown.options, location.region);
-        
-        if (stateMatch) {
-          stateMatch.selected = true;
-          stateDropdown.dispatchEvent(new Event('change'));
-          
-          // Wait for cities to load
-          await waitForOptions('#cityDropdown', 15, 200);
-          
-          const cityDropdown = document.getElementById("cityDropdown");
-          const cityMatch = findBestMatch(cityDropdown.options, location.city);
-          if (cityMatch) cityMatch.selected = true;
-        }
-      }
-    }
-
-    // Helper function to wait for dropdown options
-    function waitForOptions(selector, maxAttempts, interval) {
-      return new Promise((resolve) => {
-        let attempts = 0;
-        const check = setInterval(() => {
-          const options = document.querySelectorAll(`${selector} option`);
-          if (options.length > 1 || ++attempts >= maxAttempts) {
-            clearInterval(check);
-            resolve();
-          }
-        }, interval);
+      countryData.sort((a,b)=>a.name.localeCompare(b.name));
+      countryData.forEach(country => {
+        const option = document.createElement("option");
+        option.value = country.name;
+        option.textContent = country.name;
+        countryDropdown.appendChild(option);
       });
-    }
 
-    // Rest of your existing functions
-    document.getElementById("countryDropdown").addEventListener("change", function() {
-      const selectedCountry = this.value;
-      const stateDropdown = document.getElementById("stateDropdown");
-      
-      stateDropdown.innerHTML = '<option value="">Select State *</option>';
-      document.getElementById("cityDropdown").innerHTML = '<option value="">Select City *</option>';
-      
-      if (selectedCountry) {
-        const matchedCountry = countryData.find(c => c.name === selectedCountry);
-        
-        if (matchedCountry?.states?.length) {
-          matchedCountry.states.sort((a, b) => a.name.localeCompare(b.name));
-          matchedCountry.states.forEach(state => {
-            const option = document.createElement("option");
-            option.value = state.name;
-            option.textContent = state.name;
-            stateDropdown.appendChild(option);
-          });
-        }
+      const location = await getIPGeolocation();
+      if (location.country) {
+        await autoSelectLocation(location);
+        // Show location fields
+        const locationFields = document.getElementById("locationFields");
+        locationFields.style.display = "block";
       }
-    });
+    }
+  } catch(err){ console.error(err); }
+}
 
-    document.getElementById("stateDropdown").addEventListener("change", async function() {
-      const selectedCountry = document.getElementById("countryDropdown").value;
-      const selectedState = this.value;
+async function autoSelectLocation(location) {
+  const countryDropdown = document.getElementById("countryDropdown");
+  const countryMatch = findBestMatch(countryDropdown.options, location.country);
+  if (countryMatch) {
+    countryMatch.selected = true;
+    countryDropdown.dispatchEvent(new Event('change'));
+    await waitForOptions('#stateDropdown');
+    const stateDropdown = document.getElementById("stateDropdown");
+    const stateMatch = findBestMatch(stateDropdown.options, location.region);
+    if (stateMatch) {
+      stateMatch.selected = true;
+      stateDropdown.dispatchEvent(new Event('change'));
+      await waitForOptions('#cityDropdown');
       const cityDropdown = document.getElementById("cityDropdown");
-      
-      cityDropdown.innerHTML = '<option value="">Select City *</option>';
-      
-      if (selectedCountry && selectedState) {
-        try {
-          const res = await fetch("https://countriesnow.space/api/v0.1/countries/state/cities", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ country: selectedCountry, state: selectedState })
-          });
-          
-          const result = await res.json();
-          if (result.error === false && result.data?.length) {
-            result.data.sort((a, b) => a.localeCompare(b));
-            result.data.forEach(city => {
-              const option = document.createElement("option");
-              option.value = city;
-              option.textContent = city;
-              cityDropdown.appendChild(option);
-            });
-          }
-        } catch (error) {
-          console.error("Error loading cities:", error);
-        }
-      }
-    });
-
-    function toggleLocationFields() {
-      const dealerCheckbox = document.getElementById("dealerCheckbox");
-      const locationFields = document.getElementById("locationFields");
-      const fieldsRequired = dealerCheckbox.checked;
-      
-      locationFields.style.display = fieldsRequired ? "block" : "none";
-      document.getElementById("countryDropdown").toggleAttribute("required", fieldsRequired);
-      document.getElementById("stateDropdown").toggleAttribute("required", fieldsRequired);
-      document.getElementById("cityDropdown").toggleAttribute("required", fieldsRequired);
-      
-      if (!fieldsRequired) {
-        document.getElementById("countryDropdown").selectedIndex = 0;
-        document.getElementById("stateDropdown").innerHTML = '<option value="">Select State *</option>';
-        document.getElementById("cityDropdown").innerHTML = '<option value="">Select City *</option>';
-      }
+      const cityMatch = findBestMatch(cityDropdown.options, location.city);
+      if (cityMatch) cityMatch.selected = true;
     }
+  }
+}
 
-    function generateID() {
-      const now = new Date();
-      const pad = (n) => n.toString().padStart(2, '0');
-      return pad(now.getDate()) + pad(now.getMonth() + 1) + now.getFullYear() +
-             pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
-    }
-
-    document.getElementById("inquiryForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      document.getElementById("form_id").value = generateID();
-      
-      const fullPhone = iti.getNumber();
-      document.querySelector("#phone").value = fullPhone;
-      
-      fetch(this.action, {
-        method: 'POST',
-        body: new FormData(this)
-      })
-      .then(response => {
-        if (response.ok) {
-          document.getElementById("thankYouModal").style.display = "flex";
-        } else {
-          alert("Error submitting form. Please try again.");
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert("Error submitting form. Please try again.");
+// ------------------ Dropdown Handlers ------------------
+document.getElementById("countryDropdown").addEventListener("change", async function() {
+  const country = this.value;
+  const stateDropdown = document.getElementById("stateDropdown");
+  const cityDropdown = document.getElementById("cityDropdown");
+  stateDropdown.innerHTML = '<option value="">Select State *</option>';
+  cityDropdown.innerHTML = '<option value="">Select City *</option>';
+  if (country) {
+    const matchedCountry = countryData.find(c => c.name === country);
+    if (matchedCountry?.states?.length) {
+      matchedCountry.states.sort((a,b)=>a.name.localeCompare(b.name));
+      matchedCountry.states.forEach(state => {
+        const option = document.createElement("option");
+        option.value = state.name;
+        option.textContent = state.name;
+        stateDropdown.appendChild(option);
       });
-    });
-
-    function closePopup() {
-      document.getElementById("thankYouModal").style.display = "none";
-      document.getElementById("inquiryForm").reset();
-      toggleLocationFields();
-      iti.setNumber("");
     }
+  }
+});
 
-    // Initialize when DOM is ready
-    document.addEventListener('DOMContentLoaded', function() {
-      loadCountries();
-      document.getElementById("dealerCheckbox").addEventListener("change", toggleLocationFields);
-    });
-  </script>
+document.getElementById("stateDropdown").addEventListener("change", async function() {
+  const country = document.getElementById("countryDropdown").value;
+  const state = this.value;
+  const cityDropdown = document.getElementById("cityDropdown");
+  cityDropdown.innerHTML = '<option value="">Select City *</option>';
+  if (country && state) {
+    try {
+      const res = await fetch("https://countriesnow.space/api/v0.1/countries/state/cities", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ country, state })
+      });
+      const result = await res.json();
+      if (!result.error && result.data?.length) {
+        result.data.sort((a,b)=>a.localeCompare(b));
+        result.data.forEach(city => {
+          const option = document.createElement("option");
+          option.value = city;
+          option.textContent = city;
+          cityDropdown.appendChild(option);
+        });
+      }
+    } catch(err){ console.error(err); }
+  }
+});
+
+// ------------------ Toggle Location Fields ------------------
+function toggleLocationFields() {
+  const dealerCheckbox = document.getElementById("dealerCheckbox");
+  const locationFields = document.getElementById("locationFields");
+  const required = dealerCheckbox.checked;
+  locationFields.style.display = required ? "block" : "none";
+  document.getElementById("countryDropdown").toggleAttribute("required", required);
+  document.getElementById("stateDropdown").toggleAttribute("required", required);
+  document.getElementById("cityDropdown").toggleAttribute("required", required);
+  if (!required) {
+    document.getElementById("countryDropdown").selectedIndex = 0;
+    document.getElementById("stateDropdown").innerHTML = '<option value="">Select State *</option>';
+    document.getElementById("cityDropdown").innerHTML = '<option value="">Select City *</option>';
+  }
+}
+
+// ------------------ Form Submission ------------------
+const form = document.getElementById("inquiryForm");
+
+function generateID() {
+  const now = new Date();
+  const pad = n => n.toString().padStart(2,'0');
+  return pad(now.getDate())+pad(now.getMonth()+1)+now.getFullYear()+pad(now.getHours())+pad(now.getMinutes())+pad(now.getSeconds());
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const specificationValue = document.getElementById('specification').checked ? 'true' : 'false';
+  const dealerValue = document.getElementById('dealerCheckbox').checked ? 'true' : 'false';
+  const preferredContact = form.querySelector('select[name="preferred_contact"]').value;
+
+  document.getElementById("form_id").value = generateID();
+  document.querySelector("#phone").value = iti.getNumber();
+
+  const formData = new FormData(form);
+  formData.set('specification', specificationValue);
+  formData.set('dealer_location', dealerValue);
+  formData.set('preferred_contact', preferredContact);
+
+  try {
+    const response = await fetch(form.action, { method: 'POST', body: formData });
+    if(response.ok){
+      document.getElementById("thankYouModal").style.display = "flex";
+    } else alert("Error submitting form. Please try again.");
+  } catch(err){ console.error(err); alert("Error submitting form. Please try again."); }
+});
+
+// ------------------ Close Thank You Popup ------------------
+function closePopup() {
+  document.getElementById("thankYouModal").style.display = "none";
+  form.reset();
+  toggleLocationFields();
+  iti.setNumber("");
+}
+
+// ------------------ Initialize ------------------
+document.addEventListener('DOMContentLoaded', () => {
+  loadCountries();
+  document.getElementById("dealerCheckbox").addEventListener("change", toggleLocationFields);
+});
+</script>
+
+
 </body>
 </html>
